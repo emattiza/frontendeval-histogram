@@ -1,11 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, div)
 import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
 import RemoteData exposing (RemoteData(..), WebData)
-import Time
 
 
 type alias Model =
@@ -31,7 +29,7 @@ update msg model =
 
 
 view : Model -> Html Msg
-view model =
+view _ =
     div [ class "btn-group" ]
         []
 
