@@ -7,5 +7,5 @@ body {
 }
 
 .container {
-  width: 80%
+  @apply mx-auto grid grid-cols-1 max-w-lg
 }
