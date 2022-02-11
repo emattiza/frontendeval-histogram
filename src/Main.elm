@@ -7,8 +7,10 @@ import Html.Attributes
 import List exposing (maximum, minimum)
 import Random exposing (Generator)
 import RemoteData exposing (RemoteData(..), WebData)
+import String exposing (fromFloat)
 import Svg exposing (Svg, g, line, rect, style, svg, text_)
-import Svg.Attributes exposing (fontSize, stroke, strokeDasharray, viewBox, x, x1, x2, y, y1, y2)
+import Svg.Attributes exposing (fontSize, height, stroke, strokeDasharray, transform, viewBox, width, x, x1, x2, y, y1, y2)
+import Svg.Attributes exposing (fill)
 
 
 type alias Model =
@@ -158,15 +160,41 @@ viewGraph nums =
                 minBin =
                     minimum binKeys
                         |> Maybe.withDefault 1
+                        |> toFloat
 
                 maxBin =
                     maximum binKeys
                         |> Maybe.withDefault 10
+                        |> toFloat
+
+                barWidth =
+                    String.fromFloat ((95.0 / (maxBin - minBin)) - 5) ++ "%"
+
+                barHeight val =
+                    val
+                        * 95
+                        / 40.5
+                        |> fromFloat
+                        |> (\s -> String.append s "%")
+
+                barStart val =
+                    (val * (maxBin - minBin) * 95/100) - 5
+                        |> fromFloat
+                        |> (\s -> String.append s "%")
+
+                viewBar ix val =
+                    rect
+                        [ x <| barStart ix
+                        , y "0%"
+                        , width barWidth
+                        , height <| barHeight val
+                        , transform "translate(50 950) scale(1,-1)"
+                        , fill "green"
+                        ]
+                        []
             in
-            [ rect
-                []
-                []
-            ]
+            Dict.toList binDict
+                |> List.map (\( k, v ) -> viewBar (toFloat k) (toFloat v))
 
         bins : Dict Int Int
         bins =
